@@ -14,13 +14,87 @@
 		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
 	</head>
 	<body>
-		<div class="reveal">
+		<div class="reveal"  style="background-image: url('https://images.unsplash.com/photo-1548092372-0d1bd40894a3?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=2000&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ');">
+			<div class="reveal"  >	
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-				<section>Slide 3</section>
-				<section>Slide 4</section>
-				<section>Slide 5</section>
+				<section class="present" style="/*background-image: url('https://dpsvdv74uwwos.cloudfront.net/statics/img/ogimage/cross-site-scripting-xss.jpg');background-position:center;background-repeat: no-repeat; background-size: cover;*/">
+					<h1>XSS</h1>
+					<h2>Cross-site Scripting</h2>
+					<p><small></small></p>
+					<p><small></small></p>
+				</section>
+				<section class="present" >
+				<h3>Cross-site Scripting (XSS)</h3>
+				<p><small>Cross-site scripting, often abbreviated as XSS, is a type of attack in which malicious scripts are injected into websites and web applications for the purpose of running on the end user's device. During this process, unsanitized or unvalidated inputs (user-entered data) are used to change outputs.</small></p>
+					<p><small>Some XSS attacks do not have a specific target; the attacker simply exploits a vulnerability in the application or site, taking advantage of anyone unlucky enough to fall victim. But in many cases, XSS is performed in a more direct way, such as in an email message. An XSS attack can turn a web application or website into a vector for delivering malicious scripts to the web browsers of unsuspecting victims.</small></p>
+						<p><small>XSS attacks can exploit vulnerabilities in a range of programming environments, including VBScript, Flash, ActiveX, and JavaScript. Most often, XSS targets JavaScript because of the language's tight integration with most browsers. This ability to exploit commonly used platforms makes XSS attacks both dangerous and common.</small></p>
+				</section>
+						<section class="present" >
+					<h3>Definition</h3>
+					<p><small>Cross-site Scripting (XSS) is a client-side code injection attack. The attacker aims to execute malicious scripts in a web browser of the victim by including malicious code in a legitimate web page or web application. The actual attack occurs when the victim visits the web page or web application that executes the malicious code. The web page or web application becomes a vehicle to deliver the malicious script to the user’s browser. Vulnerable vehicles that are commonly used for Cross-site Scripting attacks are forums, message boards, and web pages that allow comments.</small></p>
+					<p><small>A web page or web application is vulnerable to XSS if it uses unsanitized user input in the output that it generates. This user input must then be parsed by the victim’s browser. XSS attacks are possible in VBScript, ActiveX, Flash, and even CSS. However, they are most common in JavaScript, primarily because JavaScript is fundamental to most browsing experiences.</small></p>
+				</section>
+				
+				<section class="present" >
+					<h3>What Can the Attacker Do with JavaScript?</h3>
+						<ul><small>
+							<li>Malicious JavaScript has access to all the objects that the rest of the web page has access to. This includes access to the user’s cookies. Cookies are often used to store session tokens. If an attacker can obtain a user’s session cookie, they can impersonate that user, perform actions on behalf of the user, and gain access to the user’s sensitive data.</li>
+						<li>JS can read the browser DOM and make arbitrary modifications to it. Luckily, this is only possible within the page where JavaScript is running.</li>
+						<li>JS can use the XMLHttpRequest object to send HTTP requests with arbitrary content to arbitrary destinations.</li>
+						<li>JS in modern browsers can use HTML5 APIs. For example, it can gain access to the user’s geolocation, webcam, microphone, and even specific files from the user’s file system. Most of these APIs require user opt-in, but the attacker can use social engineering to go around that limitation.</li>
+						</small>
+					</ul>
+				</section>
+				<section class="present" >
+					<h3>How It Works</h3>
+					<p><small>There are two stages to a typical XSS attack:</small></p>
+					<ul><small>
+						<li>To run malicious JavaScript code in a victim’s browser, an attacker must first find a way to inject malicious code (payload) into a web page that the victim visits.</li>
+						<li>After that, the victim must visit the web page with the malicious code. If the attack is directed at particular victims, the attacker can use social engineering and/or phishing to send a malicious URL to the victim.</li>
+					</small></ul>
+					<p><small>For step one to be possible, the vulnerable website needs to directly include user input in its pages. An attacker can then insert a malicious string that will be used within the web page and treated as source code by the victim’s browser. There are also variants of XSS attacks where the attacker lures the user to visit a URL using social engineering and the payload is part of the link that the user clicks.</small></p>
+				</section>
+				<section class="present" >
+					<h3>Stealing Cookies Using XSS</h3>
+					<p><small>Criminals often use XSS to steal cookies. This allows them to impersonate the victim. The attacker can send the cookie to their own server in many ways. One of them is to execute the following client-side script in the victim’s browser</small></p>
+					<small><ul>
+<li>The attacker injects a payload into the website’s database by submitting a vulnerable form with malicious JavaScript content.</li>
+<li>The victim requests the web page from the web server.</li>
+<li>The web server serves the victim’s browser the page with attacker’s payload as part of the HTML body.</li>
+<li>The victim’s browser executes the malicious script contained in the HTML body. In this case, it sends the victim’s cookie to the attacker’s server.</li>
+<li>The attacker now simply needs to extract the victim’s cookie when the HTTP request arrives at the server.</li>
+<li>The attacker can now use the victim’s stolen cookie for impersonation.</li>
+					</ul></small>
+				</section>
+				<section class="present" >
+					<h3>Cross-site Scripting Attack Vectors</h3>
+					<p><small>The following is a list of common XSS attack vectors that an attacker could use to compromise the security of a website or web application through an XSS attack</small></p>
+					<small><ul>
+					<li>The <b>script</b> tag is the most straightforward XSS payload. A script tag can reference external JavaScript code or you can embed the code within the script tag itself.</li>
+					<li>Some browsers execute JavaScript found in the tag img attributes.</li>
+					<li>The iframe tag lets you embed another HTML page in the current page. An IFrame may contain JavaScript but JavaScript in the IFrame does not have access to the DOM of the parent page due to the Content Security Policy (CSP) of the browser. However, IFrames are still very effective for pulling off phishing attacks.</li>
+				<li>In some browsers, if the type attribute of the input tag is set to image, it can be manipulated to embed a script.</li>
+				<li>The link tag, which is often used to link to external style sheets, may contain a script</li>
+				<li>The background attribute of the table and td tags can be exploited to refer to a script instead of an image.</li>
+				<li>The div tag, similar to the table and td tags, can also specify a background and therefore embed a script.</li>
+				<li>The object tag can be used to include a script from an external site.</li>
+				</ul></small>
+			</section>
+				<section class="present">
+					<h3>How to Prevent Cross-site Scripting (XSS)</h3>
+					<small><ul>
+						<li>Train and maintain awareness</li>
+						<li>Don’t trust any user input</li>
+						<li>Use escaping/encoding</li>
+						<li>Sanitize HTML</li>
+						<li>Set the HttpOnly flag</li>
+					<li>Use a Content Security Policy</li>
+					<li>Scan your web applications using a web vulnerability scanner</li>
+					</ul></small>
+				</section>
+				<section class="present">
+					<h3>Thank you!</h3>
+				</section>
 			</div>
 		</div>
 
