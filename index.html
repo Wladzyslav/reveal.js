@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Cross-site Scripting</title>
 
 		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
@@ -23,67 +23,105 @@
 					<p><small></small></p>
 					<p><small></small></p>
 				</section>
-				<!-- <section class="present" >
-				<h3>Cross-site Scripting (XSS)</h3>
-				<p><small>Cross-site scripting, often abbreviated as XSS, is a type of attack in which malicious scripts are injected into websites and web applications for the purpose of running on the end user's device. During this process, unsanitized or unvalidated inputs (user-entered data) are used to change outputs.</small></p>
-					<p><small>Some XSS attacks do not have a specific target; the attacker simply exploits a vulnerability in the application or site, taking advantage of anyone unlucky enough to fall victim. But in many cases, XSS is performed in a more direct way, such as in an email message. An XSS attack can turn a web application or website into a vector for delivering malicious scripts to the web browsers of unsuspecting victims.</small></p>
-						<p><small>XSS attacks can exploit vulnerabilities in a range of programming environments, including VBScript, Flash, ActiveX, and JavaScript. Most often, XSS targets JavaScript because of the language's tight integration with most browsers. This ability to exploit commonly used platforms makes XSS attacks both dangerous and common.</small></p>
-				</section> -->
 						<section class="present" >
 					<h3>Cross-site Scripting (XSS)</h3>
-					<p><small>Cross-site scripting ( XSS) is a web security vulnerability that allows an attacker to compromise the interactions that users have with a vulnerable application. It allows an attacker to circumvent the same origin policy, which is designed to segregate different websites from each other. Cross-site scripting vulnerabilities normally allow an attacker to masquerade as a victim user, to carry out any actions that the user is able to perform, and to access any of the user's data. If the victim user has privileged access within the application, then the attacker might be able to gain full control over all of the application's functionality and data.</small></p>
-					<!-- <p><small>A web page or web application is vulnerable to XSS if it uses unsanitized user input in the output that it generates. This user input must then be parsed by the victim’s browser. XSS attacks are possible in VBScript, ActiveX, Flash, and even CSS. However, they are most common in JavaScript, primarily because JavaScript is fundamental to most browsing experiences.</small></p> -->
+					<p><small>Cross-site scripting (XSS) is a type of web application vulnerability that enables the attackers to inject client-side script into web pages viewed by other users, and
+						upon the injected scripted is executed, to bypass the same origin policy.
+							(Note: The same-origin policy cannot stop you from sending a request!)
+							</small>
+						</p>
 				</section>
-				
-				<section class="present" >
-					<h3>What Can the Attacker Do with JavaScript?</h3>
-						<ul><small>
-							<li>Malicious JavaScript has access to all the objects that the rest of the web page has access to. This includes access to the user’s cookies. Cookies are often used to store session tokens. If an attacker can obtain a user’s session cookie, they can impersonate that user, perform actions on behalf of the user, and gain access to the user’s sensitive data.</li>
-						<li>JS can read the browser DOM and make arbitrary modifications to it. Luckily, this is only possible within the page where JavaScript is running.</li>
-						<li>JS can use the XMLHttpRequest object to send HTTP requests with arbitrary content to arbitrary destinations.</li>
-						<li>JS in modern browsers can use HTML5 APIs. For example, it can gain access to the user’s geolocation, webcam, microphone, and even specific files from the user’s file system. Most of these APIs require user opt-in, but the attacker can use social engineering to go around that limitation.</li>
-						</small>
-					</ul>
-				</section>
+
 				<section class="present" >
 					<h3>How It Works</h3>
-					<p><small>There are two stages to a typical XSS attack:</small></p>
+					<p><small>	There are three known types of XSS:</small></p>
 					<ul><small>
-						<li>To run malicious JavaScript code in a victim’s browser, an attacker must first find a way to inject malicious code (payload) into a web page that the victim visits.</li>
-						<li>After that, the victim must visit the web page with the malicious code. If the attack is directed at particular victims, the attacker can use social engineering and/or phishing to send a malicious URL to the victim.</li>
+		
+
+						<li>Stored (server-side):<ul>
+						<li>Malicious script is stored in a server resource such as a database.</li>
+						<li>By visiting the website, the script is executed.</li>
+						</ul></li>
+						<li>Reflected (server-side):<ul>
+						<li>Malicious script is transmitted to the victim via an email or similar mechanism.</li>
+						<li>By clicking on the link, the script is executed.</li>
+						
+</ul>
+<li>DOM-based (client-side): Attacks that modify the victim's DOM directly and don't require data in the HTTP response.</li>
+					
+					
 					</small></ul>
-					<!-- <p><small>For step one to be possible, the vulnerable website needs to directly include user input in its pages. An attacker can then insert a malicious string that will be used within the web page and treated as source code by the victim’s browser. There are also variants of XSS attacks where the attacker lures the user to visit a URL using social engineering and the payload is part of the link that the user clicks.</small></p> -->
 				</section>
-				<section class="present" >
-					<h3>Stealing Cookies Using XSS</h3>
-					<p><small>Criminals often use XSS to steal cookies. This allows them to impersonate the victim. The attacker can send the cookie to their own server in many ways. One of them is to execute the following client-side script in the victim’s browser</small></p>
-					<small><ul>
-<li>The attacker injects a payload into the website’s database by submitting a vulnerable form with malicious JavaScript content.</li>
-<li>The victim requests the web page from the web server.</li>
-<li>The web server serves the victim’s browser the page with attacker’s payload as part of the HTML body.</li>
-<li>The victim’s browser executes the malicious script contained in the HTML body. In this case, it sends the victim’s cookie to the attacker’s server.</li>
-<li>The attacker now simply needs to extract the victim’s cookie when the HTTP request arrives at the server.</li>
-<li>The attacker can now use the victim’s stolen cookie for impersonation.</li>
-					</ul></small>
-				</section>
-				<section class="present" >
-					<h3>Cross-site Scripting Attack Vectors</h3>
-					<p><small>The following is a list of common XSS attack vectors that an attacker could use to compromise the security of a website or web application through an XSS attack</small></p>
-					<small><ul>
-					<li>The <b>script</b> tag is the most straightforward XSS payload. A script tag can reference external JavaScript code or you can embed the code within the script tag itself.</li>
-					<li>Some browsers execute JavaScript found in the tag img attributes.</li>
-					<li>The iframe tag lets you embed another HTML page in the current page. An IFrame may contain JavaScript but JavaScript in the IFrame does not have access to the DOM of the parent page due to the Content Security Policy (CSP) of the browser. However, IFrames are still very effective for pulling off phishing attacks.</li>
-				<li>In some browsers, if the type attribute of the input tag is set to image, it can be manipulated to embed a script.</li>
-				<li>The link tag, which is often used to link to external style sheets, may contain a script</li>
-				<li>The background attribute of the table and td tags can be exploited to refer to a script instead of an image.</li>
-				<li>The div tag, similar to the table and td tags, can also specify a background and therefore embed a script.</li>
-				<li>The object tag can be used to include a script from an external site.</li>
-				</ul></small>
-			</section>
+
+
+<section>
+	<h3>DOM Exploited through JavaSrcipt </h3>
+<small><ul>
+	<li>Get/alter page content: document.getElementById('myAnchor').innerHTML</li>
+	<li>Get querystring: location.search</li>
+	<li>Get cookies: document.cookie</li>
+	<li>Read location: document.location</li>
+	<li>Read/Write location: window.location.href</li>
+	<li>Extend page content: window.open</li>
+</ul></small>
+</section>
+
+<section>
+	<h3>HTML Exploited through XSS </h3>
+<small><ul>
+	<li>a tag: a onclick="javascript" (requires a click)</li>
+	<li>div tag: div style=background:url('javascript')</li>
+	<li>form tag: form action="logon.aspx" method="post" onsubmit="javascript"</li>
+	<li>iframe tag: iframe src="javascript"</li>
+	<li>object: object param name="src" value="javascript" param object</li>
+	<li>img tag: img src="javascript" (1x1 px to be invisible or use Javascript to create an image object)
+		script tag
+		   var image1 = new Image();
+		   image1.src = "http://host/?command";
+		script</li>
+	<li>script tag: script src="javascript"</li>
+	<li>embed tag: embed src="javascript"</li>
+</ul></small>
+</section>
+
+<section>
+	<h3>URL-Shortening Service</h3>
+<small><p>URL-shortening service like bit.ly, TinyURL, or goo.gl can provide a really helpful service for social network users, but it's also a really useful service for XSS attackers to hide the poisoned links.  For example, a long URL such as http://en.wikipedia.org/wiki/URL_shortening can be shorten to http://bit.ly/urlwikifor a redirect.</p></small>
+</section>
+
+<section>
+	<h3>Reflected (First-Order) XSS </h3>
+<small><ul>
+	<li>A reflected HTML injection attack a web application which accepts user input in an HTTP request and responds with the identical user input within the body of the HTTP response.  </li>
+	<li>This type of XSS is "reflected" because it involves crafting a request containing embedded JavaScript which is reflected back to any user who makes the request. </li>
+	<li>The attack payload is delivered and executed via a single request and response. For this reason, it is also sometimes referred to as first-order XSS.</li>
+	<li>Create the following link to send a victim's cookies to the hacker's website</li>
+</ul></small>
+<img src="http://hwang.cisdept.cpp.edu/swanew/images/RXSS.gif" />
+</section>
+
+<section>
+	<h3>Stored (Persistent) XSS</h3>
+<small><ul>
+	<li>The XSS script is posted in web applications such as online message board, blog, and so on, and then "stored" by the server in the database permanently.</li>
+<li>Since the XSS script is rendered automatically, individual victims are randomly targeted.</li>
+<li>In social networking sites, the script would be further designed to self-propagate across accounts, creating a type of a client-side worm.</li>
+<li>Steps in XSS attack on picture</li>
+</ul></small>
+<img src="http://hwang.cisdept.cpp.edu/swanew/images/SXSS.gif"/>
+</section>
+<section>
+	<h3>DOM-based XSS</h3>
+<small><ul>
+	<li>Also called DOM XSS, local XSS or Type-0 XSS</li>
+	<li>The attack payload is executed as a result of modifying the HTML Document Object Model (DOM) in the victim's browser used by the original client-side script of the page.</li>
+	<li>The DOM provides a structural representation of the HTML and XML document and enable the document's content and visual presentation to be modified by using a scripting language such as JavaScript.</li>
+</ul></small>
+</section>
+
 				<section class="present">
 					<h3>How to Prevent Cross-site Scripting (XSS)</h3>
 					<small><ul>
-						<li>Train and maintain awareness</li>
 						<li>Don’t trust any user input</li>
 						<li>Use escaping/encoding</li>
 						<li>Sanitize HTML</li>
@@ -93,7 +131,7 @@
 					</ul></small>
 				</section>
 				<section class="present">
-					<h3>Thank you!</h3>
+					<h3>Thank you for attention!</h3>
 				</section>
 			</div>
 		</div>
